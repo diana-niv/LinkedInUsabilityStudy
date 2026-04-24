@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Usability Study</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #0f0f0f;
+            --paper: #f5f0e8;
+            --cream: #ede8dc;
+            --accent: #0a66c2;
+            --accent-warm: #c2520a;
+            --muted: #5a5650;
+            --rule: #ccc5b5;
+            --bad: #c0392b;
+            --ok: #e67e22;
+            --good: #27ae60;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--paper);
+            color: var(--ink);
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 300;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* ── HEADER ── */
+        header {
+            background: var(--ink);
+            color: var(--paper);
+            padding: 72px 48px 56px;
+            position: relative;
+            overflow: hidden;
+        }
+        header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                    -45deg,
+                    transparent,
+                    transparent 24px,
+                    rgba(255,255,255,0.03) 24px,
+                    rgba(255,255,255,0.03) 25px
+            );
+        }
+        .header-inner { max-width: 900px; margin: 0 auto; position: relative; }
+        .label {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: rgba(245,240,232,0.45);
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(36px, 6vw, 64px);
+            line-height: 1.1;
+            margin-bottom: 32px;
+            letter-spacing: -0.02em;
+        }
+        h1 em {
+            font-style: italic;
+            color: rgba(245,240,232,0.5);
+        }
+        .authors {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 24px;
+            font-size: 13px;
+            color: rgba(245,240,232,0.6);
+            font-family: 'DM Mono', monospace;
+        }
+        .authors span { white-space: nowrap; }
+        .pdf-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 28px;
+            padding: 9px 18px;
+            border: 1px solid rgba(245,240,232,0.3);
+            color: var(--paper);
+            text-decoration: none;
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .pdf-btn:hover {
+            background: rgba(245,240,232,0.1);
+            border-color: rgba(245,240,232,0.6);
+        }
+
+        /* ── ABSTRACT BAND ── */
+        .abstract-band {
+            background: var(--accent);
+            color: #fff;
+            padding: 40px 48px;
+        }
+        .abstract-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 32px;
+            align-items: start;
+        }
+        .abstract-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            opacity: 0.6;
+            padding-top: 4px;
+        }
+        .abstract-text {
+            font-size: 15px;
+            line-height: 1.8;
+            opacity: 0.92;
+            font-weight: 300;
+        }
+
+        /* ── MAIN CONTENT ── */
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 64px 48px;
+        }
+
+        /* ── SECTIONS ── */
+        section { margin-bottom: 72px; }
+
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            gap: 16px;
+            margin-bottom: 28px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--rule);
+        }
+        .section-num {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: var(--muted);
+            letter-spacing: 0.1em;
+            flex-shrink: 0;
+        }
+        h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 26px;
+            letter-spacing: -0.01em;
+        }
+        h3 {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin: 28px 0 10px;
+        }
+        p { margin-bottom: 14px; font-size: 15px; }
+
+        /* ── HEURISTIC TABLE ── */
+        .heuristic-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+        .heuristic-table thead tr {
+            background: var(--ink);
+            color: var(--paper);
+        }
+        .heuristic-table th {
+            padding: 10px 14px;
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 500;
+            text-align: left;
+        }
+        .heuristic-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--rule);
+            vertical-align: top;
+            line-height: 1.5;
+        }
+        .heuristic-table tr:last-child td { border-bottom: none; }
+        .heuristic-table tbody tr:nth-child(even) { background: var(--cream); }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 2px;
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+        .badge-minor { background: #fef3cd; color: #856404; }
+        .badge-major { background: #f8d7da; color: #721c24; }
+
+        /* ── DEMOGRAPHIC GRID ── */
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .demo-card {
+            background: var(--cream);
+            border: 1px solid var(--rule);
+            padding: 20px 18px;
+        }
+        .demo-card-title {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 14px;
+        }
+        .demo-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+            border-bottom: 1px solid var(--rule);
+            font-size: 13px;
+            gap: 8px;
+        }
+        .demo-row:last-child { border-bottom: none; }
+        .demo-row .pct {
+            font-family: 'DM Mono', monospace;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+        .bar-wrap { display: flex; align-items: center; gap: 8px; }
+        .mini-bar {
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+            opacity: 0.25;
+            flex-shrink: 0;
+        }
+
+        /* ── SUS SCORES ── */
+        .sus-scores {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 24px 0;
+        }
+        .sus-card {
+            padding: 28px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .sus-card.desktop { background: var(--ink); color: var(--paper); }
+        .sus-card.mobile  { background: var(--cream); border: 1px solid var(--rule); }
+        .sus-card .platform {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            opacity: 0.5;
+            margin-bottom: 12px;
+        }
+        .sus-score {
+            font-family: 'DM Serif Display', serif;
+            font-size: 72px;
+            line-height: 1;
+            letter-spacing: -0.04em;
+            margin-bottom: 8px;
+        }
+        .sus-card.desktop .sus-score { color: var(--paper); }
+        .sus-card.mobile  .sus-score { color: var(--accent-warm); }
+        .sus-rating {
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .sus-card.desktop .sus-rating { color: var(--good); }
+        .sus-card.mobile  .sus-rating { color: var(--bad); }
+        .sus-note {
+            font-size: 12px;
+            margin-top: 10px;
+            opacity: 0.6;
+            line-height: 1.5;
+        }
+
+        /* ── TASK CARDS ── */
+        .task-cards { display: flex; flex-direction: column; gap: 24px; }
+        .task-card {
+            border: 1px solid var(--rule);
+            overflow: hidden;
+        }
+        .task-header {
+            padding: 16px 20px;
+            background: var(--ink);
+            color: var(--paper);
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+        }
+        .task-num {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            opacity: 0.5;
+            flex-shrink: 0;
+        }
+        .task-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 18px;
+        }
+        .task-body { display: grid; grid-template-columns: 1fr 1fr; }
+        .task-platform {
+            padding: 20px;
+            font-size: 13.5px;
+            line-height: 1.6;
+        }
+        .task-platform:first-child { border-right: 1px solid var(--rule); }
+        .task-platform-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 10px;
+        }
+        .task-insight {
+            background: var(--cream);
+            padding: 14px 20px;
+            font-size: 13px;
+            color: var(--muted);
+            border-top: 1px solid var(--rule);
+            grid-column: 1 / -1;
+            font-style: italic;
+            line-height: 1.6;
+        }
+        .stat-chip {
+            display: inline-block;
+            background: var(--ink);
+            color: var(--paper);
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            padding: 1px 6px;
+            border-radius: 2px;
+            vertical-align: middle;
+        }
+        .stat-chip.bad { background: var(--bad); }
+        .stat-chip.ok  { background: var(--ok); }
+        .stat-chip.good{ background: var(--good); }
+
+        /* ── CONCLUSIONS ── */
+        .finding-list { display: flex; flex-direction: column; gap: 16px; margin-top: 8px; }
+        .finding {
+            display: grid;
+            grid-template-columns: 36px 1fr;
+            gap: 16px;
+            align-items: start;
+            padding: 18px 20px;
+            border: 1px solid var(--rule);
+            background: var(--cream);
+        }
+        .finding-num {
+            font-family: 'DM Serif Display', serif;
+            font-size: 28px;
+            color: var(--accent);
+            line-height: 1;
+            margin-top: 2px;
+        }
+        .finding-text strong {
+            display: block;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        .finding-text p { font-size: 13.5px; margin: 0; }
+
+        /* ── AUTHOR NOTES ── */
+        .author-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 8px; }
+        .author-card {
+            border: 1px solid var(--rule);
+            padding: 22px 20px;
+            background: var(--paper);
+        }
+        .author-name {
+            font-family: 'DM Serif Display', serif;
+            font-size: 17px;
+            margin-bottom: 4px;
+        }
+        .author-role {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .author-card p { font-size: 13px; line-height: 1.6; margin: 0; }
+
+        /* ── LIMITATIONS ── */
+        .lim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
+        .lim-box {
+            padding: 18px 20px;
+            background: var(--cream);
+            border-left: 3px solid var(--accent-warm);
+            font-size: 13.5px;
+            line-height: 1.6;
+        }
+        .lim-box strong { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-warm); margin-bottom: 6px; }
+
+        /* ── FOOTER ── */
+        footer {
+            background: var(--ink);
+            color: rgba(245,240,232,0.4);
+            padding: 32px 48px;
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.08em;
+        }
+        footer .footer-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        footer a { color: rgba(245,240,232,0.4); }
+
+        @media (max-width: 680px) {
+            header, main, .abstract-band { padding-left: 24px; padding-right: 24px; }
+            .demo-grid, .sus-scores, .author-cards, .lim-grid { grid-template-columns: 1fr; }
+            .task-body { grid-template-columns: 1fr; }
+            .task-platform:first-child { border-right: none; border-bottom: 1px solid var(--rule); }
+            .abstract-inner { grid-template-columns: 1fr; }
+            .abstract-label { writing-mode: horizontal-tb; transform: none; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-inner">
+        <p class="label">UEE · User Experience Evaluation · FH St. Pölten</p>
+        <h1>LinkedIn<br><em>Usability Study</em></h1>
+        <div class="authors">
+            <span>Tijana Mijatović</span>
+            <span>Angelina Hess</span>
+            <span>Diana Ivanova</span>
+        </div>
+        <a class="pdf-btn" href="assets/FinalTestReport-uee.pdf" target="_blank" download>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download PDF
+        </a>
+    </div>
+</header>
+
+<div class="abstract-band">
+    <div class="abstract-inner">
+        <span class="abstract-label">Abstract</span>
+        <p class="abstract-text">This study evaluated LinkedIn's mobile and desktop usability for university students and recent graduates looking for jobs. We used a Heuristic Evaluation followed by a counter-balanced user study with ten participants. Key issues included poor Consistency and Standards, a bad Match between System and the Real World, and a lack of User Control and Freedom — all significantly worse on mobile.</p>
+    </div>
+</div>
+
+<main>
+
+    <!-- 1. INTRODUCTION -->
+    <section>
+        <div class="section-header">
+            <span class="section-num">01</span>
+            <h2>Introduction</h2>
+        </div>
+        <p>LinkedIn's main goal is to help people build their professional profiles, grow their networks, and connect with opportunities that move their careers forward. For our study, we focused on students and asked them to complete tasks related to the system's usability: finding a job, returning to a saved job, and exploring events by finding, attending, and leaving them.</p>
+        <p>We then compared how these tasks performed on the desktop site versus the mobile app, targeting university students and recent graduates as our primary user group.</p>
+    </section>
+
+    <!-- 2. HEURISTIC EVALUATION -->
+    <section>
+        <div class="section-header">
+            <span class="section-num">02</span>
+            <h2>Heuristic Evaluation</h2>
+        </div>
+        <p>We evaluated the LinkedIn system through Nielsen's 10 usability heuristics. The following problems were identified as very important for our target group:</p>
+        <table class="heuristic-table">
+            <thead>
+            <tr>
+                <th>Page</th>
+                <th>Problem</th>
+                <th>Heuristic</th>
+                <th>Severity</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><strong>My Jobs page</strong></td>
+                <td>When a user saves a job, they can find it on "My Jobs". On both Mobile and Desktop there is a mismatch between the names of "Saved" and "My Jobs".</td>
+                <td>4. Consistency and Standards</td>
+                <td><span class="badge badge-minor">Minor</span></td>
+            </tr>
+            <tr>
+                <td><strong>My Network page</strong></td>
+                <td>The Events page is hidden under "Manage my network" on the Mobile version, and users may not be able to find them.</td>
+                <td>2. Match between System and the Real World</td>
+                <td><span class="badge badge-major">Major</span></td>
+            </tr>
+            <tr>
+                <td><strong>Single event page</strong></td>
+                <td>When attending an event, the option to leave it isn't shown directly on the screen — the user has to use the 3-dot menu.</td>
+                <td>3. User Control and Freedom</td>
+                <td><span class="badge badge-major">Major</span></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- 3. USER STUDY -->
+    <section>
+        <div class="section-header">
+            <span class="section-num">03</span>
+            <h2>User Study</h2>
+        </div>
+
+        <h3>Participant Demographics</h3>
+        <div class="demo-grid">
+            <div class="demo-card">
+                <div class="demo-card-title">Occupation</div>
+                <div class="demo-row"><span>Student</span><span class="pct">80%</span></div>
+                <div class="demo-row"><span>Actively looking</span><span class="pct">30%</span></div>
+                <div class="demo-row"><span>Employed</span><span class="pct">10%</span></div>
+            </div>
+            <div class="demo-card">
+                <div class="demo-card-title">Usage Frequency</div>
+                <div class="demo-row"><span>Daily</span><span class="pct">30%</span></div>
+                <div class="demo-row"><span>Weekly</span><span class="pct">50%</span></div>
+                <div class="demo-row"><span>Monthly</span><span class="pct">10%</span></div>
+                <div class="demo-row"><span>Rarely / Never</span><span class="pct">10%</span></div>
+            </div>
+            <div class="demo-card">
+                <div class="demo-card-title">Preferred Device</div>
+                <div class="demo-row"><span>Mobile</span><span class="pct">60%</span></div>
+                <div class="demo-row"><span>Desktop</span><span class="pct">30%</span></div>
+                <div class="demo-row"><span>Both equally</span><span class="pct">10%</span></div>
+            </div>
+        </div>
+
+        <h3>Study Design</h3>
+        <p>The study employed a <strong>within-subject, counter-balanced design</strong> across Desktop and Mobile conditions. Every participant completed the same tasks on both platforms. Half started on Mobile, then moved to Desktop; the other half did the reverse. Sessions were screen-recorded; SEQ and SUS questionnaires were administered via Google Forms.</p>
+        <p>A clean LinkedIn profile was created for each session to ensure task performance was not influenced by existing user data.</p>
+
+        <h3>Tasks</h3>
+        <p>Three core tasks were chosen to represent the key user goals of our target group:</p>
+        <ul style="padding-left: 24px; font-size: 15px; line-height: 2;">
+            <li><strong>Task 1 – Find a Job and Apply:</strong> standard function test.</li>
+            <li><strong>Task 2 – Save a Job and Open Saved Jobs:</strong> participants had to avoid using the pop-up shortcut to test native menu navigation.</li>
+            <li><strong>Task 3 – Find, Attend, and Leave an Event:</strong> search function was prohibited to test organic discoverability.</li>
+        </ul>
+    </section>
+
+    <!-- 4. RESULTS -->
+    <section>
+        <div class="section-header">
+            <span class="section-num">04</span>
+            <h2>Results</h2>
+        </div>
+
+        <h3>Task Performance</h3>
+        <div class="task-cards">
+
+            <div class="task-card">
+                <div class="task-header">
+                    <span class="task-num">TASK 01</span>
+                    <span class="task-title">Find a Job and Apply</span>
+                </div>
+                <div class="task-body">
+                    <div class="task-platform">
+                        <div class="task-platform-label">🖥 Desktop</div>
+                        All <span class="stat-chip good">10/10</span> participants completed without difficulty. The search bar was a frequent navigation tool <span class="stat-chip">6/10</span>.
+                    </div>
+                    <div class="task-platform">
+                        <div class="task-platform-label">📱 Mobile</div>
+                        All <span class="stat-chip good">10/10</span> participants also completed successfully. No distinct recurring navigation patterns were observed.
+                    </div>
+                    <div class="task-insight">
+                        ↗ Both platforms demonstrate strong usability for simple, straightforward tasks. Desktop users appeared more inclined to use built-in navigation tools.
+                    </div>
+                </div>
+            </div>
+
+            <div class="task-card">
+                <div class="task-header">
+                    <span class="task-num">TASK 02</span>
+                    <span class="task-title">Save a Job &amp; Open Saved Jobs</span>
+                </div>
+                <div class="task-body">
+                    <div class="task-platform">
+                        <div class="task-platform-label">🖥 Desktop</div>
+                        Mild confusion in <span class="stat-chip ok">4/10</span> users, primarily assuming saved jobs would be in the profile section. Most completed the task without major difficulty.
+                    </div>
+                    <div class="task-platform">
+                        <div class="task-platform-label">📱 Mobile</div>
+                        Similar confusion in <span class="stat-chip ok">4/10</span> users, with the same misattribution to the profile section. Results slightly more varied but majority completed.
+                    </div>
+                    <div class="task-insight">
+                        ↗ Confusion across both platforms suggests a cross-platform design issue related to feature naming ("Saved" vs. "My Jobs"). Clearer labeling or grouping would help both interfaces.
+                    </div>
+                </div>
+            </div>
+
+            <div class="task-card">
+                <div class="task-header">
+                    <span class="task-num">TASK 03</span>
+                    <span class="task-title">Find, Attend, and Leave an Event</span>
+                </div>
+                <div class="task-body">
+                    <div class="task-platform">
+                        <div class="task-platform-label">🖥 Desktop</div>
+                        All users completed successfully, though <span class="stat-chip ok">4/10</span> were initially unsure where to begin. Navigation involved moderate exploration.
+                    </div>
+                    <div class="task-platform">
+                        <div class="task-platform-label">📱 Mobile</div>
+                        Confusion in all sessions <span class="stat-chip bad">10/10</span>. Frustration common <span class="stat-chip bad">6/10</span>. Did not finish (DNF): <span class="stat-chip bad">6/10</span>. Heavy reliance on homepage scrolling <span class="stat-chip">8/10</span>.
+                    </div>
+                    <div class="task-insight">
+                        ↗ This task revealed the largest platform disparity. The Events feature's low visibility affected both platforms, but its impact was substantially more severe on mobile.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3>SUS Scores</h3>
+        <div class="sus-scores">
+            <div class="sus-card desktop">
+                <div class="platform">Desktop</div>
+                <div class="sus-score">72.8</div>
+                <div class="sus-rating">Good ✓</div>
+                <div class="sus-note">Above average (benchmark: 68). Users found the desktop interface learnable and consistent.</div>
+            </div>
+            <div class="sus-card mobile">
+                <div class="platform" style="color:var(--muted)">Mobile</div>
+                <div class="sus-score">54</div>
+                <div class="sus-rating">Poor ✗</div>
+                <div class="sus-note">Well below average. Rated "unnecessarily complex" (Q2) and "cumbersome" (Q8) by participants.</div>
+            </div>
+        </div>
+
+        <h3>SEQ Score Summary</h3>
+        <p>The SEQ (Single Ease Question) results reinforced the SUS findings. Desktop performance was consistently rated higher across all three tasks. The most dramatic gap appeared at Task 3, where mobile participants reported far greater difficulty — many scoring it at the lowest possible ease rating.</p>
+    </section>
+
+    <!-- 5. CONCLUSION -->
+    <section>
+        <div class="section-header">
+            <span class="section-num">05</span>
+            <h2>Conclusion</h2>
+        </div>
+
+        <p>User testing fully supported our claims from the heuristic evaluation. The same usability issues appeared in real user behavior, confirming the validity of our initial findings. What became obvious very quickly is that <strong>desktop generally supports tasks well, while mobile users struggled significantly</strong> — often becoming confused or frustrated.</p>
+
+        <div class="finding-list">
+            <div class="finding">
+                <div class="finding-num">1</div>
+                <div class="finding-text">
+                    <strong>Saved Jobs Are Harder to Find Than They Should Be</strong>
+                    <p>LinkedIn uses two different labels for the same feature ("Saved" vs. "My Jobs"). This caused real confusion — participants clicked around different menus, hesitated, or opened wrong pages before finding their saved jobs. Even more pronounced on mobile.</p>
+                </div>
+            </div>
+            <div class="finding">
+                <div class="finding-num">2</div>
+                <div class="finding-text">
+                    <strong>The Events Feature Is Hidden — and Users Really Feel It</strong>
+                    <p>LinkedIn makes it surprisingly difficult to find Events, especially on mobile. Participants had to dig through "Manage my network" or scroll the homepage at length, with several noting they had never used Events before. This single issue became the biggest barrier in Task 3.</p>
+                </div>
+            </div>
+            <div class="finding">
+                <div class="finding-num">3</div>
+                <div class="finding-text">
+                    <strong>Leaving an Event Isn't Straightforward</strong>
+                    <p>The "Leave event" option is tucked behind a three-dot menu. Almost no one found it quickly. Several participants weren't sure if they had done it correctly, and mobile users struggled the most — some failing the task entirely.</p>
+                </div>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 40px;">Limitations &amp; Challenges</h3>
+        <div class="lim-grid">
+            <div class="lim-box">
+                <strong>Sample Homogeneity</strong>
+                All participants were students from the same university, limiting the range of user perspectives and generalisability.
+            </div>
+            <div class="lim-box">
+                <strong>Time Constraints</strong>
+                A tight deadline prevented running additional test sessions, which would have increased statistical robustness.
+            </div>
+        </div>
+    </section>
+
+    <!-- AUTHOR NOTES -->
+    <section>
+        <div class="section-header">
+            <span class="section-num">06</span>
+            <h2>Author Contributions</h2>
+        </div>
+        <div class="author-cards">
+            <div class="author-card">
+                <div class="author-name">Tijana Mijatović</div>
+                <div class="author-role">Moderator · SEQ Analysis</div>
+                <p>Led moderation for 6 of 10 sessions. Set up the clean LinkedIn profile and screen recording setup. Processed SEQ results and created visualizations using R Studio.</p>
+            </div>
+            <div class="author-card">
+                <div class="author-name">Diana Ivanova</div>
+                <div class="author-role">Moderator · SUS Analysis</div>
+                <p>Moderated 4 sessions and was note-taker for 4 additional sessions. Analyzed SUS quantitative results and transformed raw data into effective visualizations.</p>
+            </div>
+            <div class="author-card">
+                <div class="author-name">Angelina Hess</div>
+                <div class="author-role">Note-Taker · Qualitative Analysis</div>
+                <p>Primary note-taker during user sessions. Identified key themes from qualitative data and drew the study's conclusions by synthesizing all findings.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- REFERENCES -->
+    <section style="margin-bottom: 0">
+        <div class="section-header">
+            <span class="section-num">Ref</span>
+            <h2>References</h2>
+        </div>
+        <p style="font-family: 'DM Mono', monospace; font-size: 13px; color: var(--muted);">
+            [1] Nielsen, J. (1994). <em>Usability inspection methods.</em> John Wiley &amp; Sons.
+        </p>
+    </section>
+
+</main>
+
+<footer>
+    <div class="footer-inner">
+        <span>LinkedIn Usability Study · UEE · FH St. Pölten</span>
+        <span>Mijatović · Hess · Ivanova</span>
+    </div>
+</footer>
+
+</body>
+</html>
